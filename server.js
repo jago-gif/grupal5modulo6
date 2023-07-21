@@ -23,11 +23,10 @@ app.get("/", async (req, res) => {
   try {
     await getAllpokemon();
     await getPokemones();
-    console.log(pokemones);
-    res.render("index", { pokemones }); // Renderizar la página con los Pokémones
+    res.render("index", { pokemones });
   } catch (error) {
     console.error(error);
-    res.send("Error al obtener los datos"); // En caso de error, enviar un mensaje de error
+    res.send("Error al obtener los datos"); 
   }
 });
 
@@ -41,15 +40,12 @@ async function getPokemones() {
   for (let i = 0; i < pokeinfo[0].length; i++) {
     await getPokemon(pokeinfo[0][i].url);
   }
-  console.log(pokemones);
 }
 
 async function getPokemon(url) {
-  //console.log(url)
   const response = await fetch(`${url}`);
   const data = await response.json();
   pokemones.push({ nombre: data.name, imagen: data.sprites.front_default });
-  console.log(pokemones);
 }
 
 app.listen(3000, () => {
