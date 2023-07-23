@@ -8,6 +8,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 //fin recuperación ruta raiz
 
+const PORT = process.env.PORT || 3000;
+
 
 const api = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=150";
 
@@ -30,6 +32,10 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/hola", (req, res) => {
+ res.send("Hola mundo"); 
+ 
+})
 
 async function getAllpokemon() {
   const response = await fetch(`${api}`);
@@ -48,6 +54,6 @@ async function getPokemon(url) {
   pokemones.push({ nombre: data.name, imagen: data.sprites.front_default });
 }
 
-app.listen(3000, () => {
-  console.log("Server on port 3000");
+app.listen(PORT, () => {
+  console.log("Server on port " + PORT);
 });
