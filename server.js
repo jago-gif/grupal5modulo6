@@ -1,5 +1,7 @@
 import express from "express";
 import hbs from "hbs";
+import fetch from "node-fetch";
+
 
 //recuperar ruta raiz
 import { dirname } from "path";
