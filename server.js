@@ -15,8 +15,6 @@ const PORT = process.env.PORT || 3000;
 
 const api = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=150";
 
-let pokeinfo = [];
-let pokemones = [];
 
 const app = express();
 app.set("view engine", "hbs");
@@ -25,8 +23,11 @@ hbs.registerPartials(__dirname + "/views/componentes");
 
 app.get("/", async (req, res) => {
   try {
-    await getAllpokemon();
-    await getPokemones();
+   const pokeinfo = await getAllpokemon();
+  
+   const pokemones = await getPokemones(pokeinfo);
+   console.log(pokemones);
+    
     res.render("index", { pokemones });
   } catch (error) {
     console.error(error);
@@ -42,20 +43,26 @@ app.get("/hola", (req, res) => {
 async function getAllpokemon() {
   const response = await fetch(`${api}`);
   const data = await response.json();
-  pokeinfo.push(data.results);
+  return(data.results);
 }
-async function getPokemones() {
-  for (let i = 0; i < pokeinfo[0].length; i++) {
-    await getPokemon(pokeinfo[0][i].url);
+async function getPokemones(pokeinfo) {
+  let pokemones = [];
+  for (let i = 0; i < pokeinfo.length; i++) {
+    const pokemon = await getPokemon(pokeinfo[i].url);
+    pokemones.push(pokemon);
   }
+      return pokemones;
+
 }
 
 async function getPokemon(url) {
   const response = await fetch(`${url}`);
   const data = await response.json();
-  pokemones.push({ nombre: data.name, imagen: data.sprites.front_default });
+  const poke = { nombre: data.name, imagen: data.sprites.front_default };
+  return poke;
+
 }
 
 app.listen(PORT, () => {
   console.log("Server on port " + PORT);
-});
+}); 
